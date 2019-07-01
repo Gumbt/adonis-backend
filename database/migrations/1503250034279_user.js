@@ -8,9 +8,9 @@ class UserSchema extends Schema {
     this.create('users', (table) => {
       table.increments()
       table.string('username', 80).notNullable().unique()
-      table.string('email', 254).notNullable().unique()
+      table.string('email', 190).notNullable().unique()
       table.string('password', 60).notNullable()
-      table.string('token', 254)
+      table.string('token', 190)
       table.timestamp('token_created_at')
       table.timestamps()
     })
