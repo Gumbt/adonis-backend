@@ -10,6 +10,7 @@ Route.post('passwords', 'ForgotPasswordController.store').validator('ForgotPassw
 Route.put('passwords', 'ForgotPasswordController.update').validator('ResetPassword')
 
 Route.get('/files/:id', 'FileController.show')
+Route.post('/download', 'YoutubeController.download')
 
 Route.group(() => {
     Route.post('/files', 'FileController.store')
