@@ -30,6 +30,10 @@ class YoutubeController {
                 chunk_size: 6000000 },
             function(error, result) {
                 console.log(result, error)
+                fs.unlink(`tmp/uploads/${filename}.${data.type}`, function(err) {
+                    if (err) throw err
+                    console.log('File deleted')
+                })
             });
         });
     }
