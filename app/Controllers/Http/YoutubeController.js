@@ -2,28 +2,25 @@
 
 const fs = require('fs');
 const ytdl = require('ytdl-core');
-const Helpers = use('Helpers')
-const ffmpeg   = require('fluent-ffmpeg');
 
 class YoutubeController {
-    download({request}){
-        const url = request.input('url')
-
-        let stream = ytdl(url, {quality: 'highestaudio'})
-        let start = Date.now();
-        ffmpeg(stream)
-          .audioBitrate(128)
-          .save(`tmp/songs/teste.mp3`)
-          .on('progress', (p) => {
-            readline.cursorTo(process.stdout, 0);
-            process.stdout.write(`${p.targetSize}kb downloaded`);
-          })
-          .on('end', () => {
-            console.log(`\ndone, thanks - ${(Date.now() - start) / 1000}s`);
-          });
-
-
-        //.pipe(fs.createWriteStream(`tmp/songs/video.mp3`))
+    download({ request }) {
+        const data = request.only(['url', 'type'])
+        let video
+        let filename = Date.now()
+        if (data.type === "mp3") {
+            video = ytdl(data.url, { filter: 'audioonly', quality: 'highestaudio' })
+            video.pipe(fs.createWriteStream(`tmp/songs/${filename}.mp3`))
+        } else {
+            video = ytdl(data.url, { quality: 'highest' })
+            video.pipe(fs.createWriteStream(`tmp/videos/${filename}.${data.type}`))
+        }
+        video.on('progress', (chunkLength, downloaded, total) => {
+            console.log(`(${(downloaded / 1024 / 1024).toFixed(2)}MB of ${(total / 1024 / 1024).toFixed(2)}MB)\n`);
+        });
+        video.on('end', () => {
+            console.log('terminou de baixar')
+        });
     }
 }
 
