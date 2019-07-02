@@ -2,17 +2,18 @@
 
 const fs = require('fs');
 const ytdl = require('ytdl-core');
+const cloudinary = require('../../../resources/CloudinaryService');
 
 class YoutubeController {
-    async download({ request }) {
+    async download({ request, response }) {
         const data = request.only(['url', 'type', 'quality', 'begin'])
         let video
         let filename = Date.now()
         if (data.type === "mp3") {
             video = await ytdl(data.url, { filter: 'audioonly', quality: data.quality })
-            video.pipe(fs.createWriteStream(`tmp/uploads/${filename}.mp3`))
+            video.pipe(fs.createWriteStream(`tmp/uploads/${filename}.${data.type}`))
         } else {
-            video = ytdl(data.url, { quality: data.quality })
+            video = await ytdl(data.url, { quality: data.quality })
             video.pipe(fs.createWriteStream(`tmp/uploads/${filename}.${data.type}`))
         }
         video.on('info', (info) => {
@@ -23,6 +24,13 @@ class YoutubeController {
         });
         video.on('end', () => {
             console.log('terminou de baixar')
+            cloudinary.uploader.upload(`tmp/uploads/${filename}.${data.type}`, {
+                resource_type: "auto",
+                public_id: `songs/${filename}`,
+                chunk_size: 6000000 },
+            function(error, result) {
+                console.log(result, error)
+            });
         });
     }
 }
