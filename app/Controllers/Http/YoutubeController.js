@@ -27,7 +27,8 @@ class YoutubeController {
             cloudinary.uploader.upload(`tmp/uploads/${filename}.${data.type}`, {
                 resource_type: "auto",
                 public_id: `songs/${filename}`,
-                chunk_size: 6000000 },
+                chunk_size: 6000000
+            },
             function(error, result) {
                 console.log(result, error)
                 fs.unlink(`tmp/uploads/${filename}.${data.type}`, function(err) {
