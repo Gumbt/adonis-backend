@@ -11,7 +11,6 @@ class YoutubeController {
     }
     onMessage (data){
         //this.socket.broadcastToAll('message', data)
-        console.log(data)
         let video
         let filename = Date.now()
         if (data.type === "mp3") {
