@@ -4,10 +4,10 @@
 const Model = use('Model')
 
 class Playlist extends Model {
-    user () {
+    user() {
         return this.belongsTo('App/Models/User')//1 projeto pertence a 1 usuario
     }
-    song () {
+    songs() {
         return this.hasMany('App/Models/Song')
     }
 }

@@ -17,8 +17,9 @@ class YoutubeController {
             video = await ytdl(data.url, { quality: data.quality })
             video.pipe(fs.createWriteStream(`tmp/uploads/${filename}.${data.type}`))
         }
+        let infoSong
         video.on('info', (info) => {
-            const infoSong = info
+            infoSong = info
         })
         video.on('progress', (chunkLength, downloaded, total) => {
             console.log(`(${(downloaded / 1024 / 1024).toFixed(2)}MB of ${(total / 1024 / 1024).toFixed(2)}MB)\n`);
@@ -30,20 +31,20 @@ class YoutubeController {
                 public_id: `songs/${filename}`,
                 chunk_size: 6000000
             },
-            function(error, result) {
-                console.log(result, error)
-                fs.unlink(`tmp/uploads/${filename}.${data.type}`, function(err) {
-                    if (err) throw err
-                    console.log('File deleted')
-                    const song = Song.create({
-                        playlist_id: data.playlist,
-                        name: infoSong.title,
-                        url: result.url,
-                        type: 'audio',
-                        subtype: data.type
+                function (error, result) {
+                    //console.log(result, error)
+                    fs.unlink(`tmp/uploads/${filename}.${data.type}`, function (err) {
+                        if (err) throw err
+                        console.log('File deleted')
+                        Song.create({
+                            playlist_id: data.playlist,
+                            name: infoSong.title,
+                            url: result.url,
+                            type: 'audio',
+                            subtype: data.type
+                        })
                     })
-                })
-            });
+                });
         });
     }
 }

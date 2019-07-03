@@ -15,11 +15,14 @@ Route.post('/download', 'YoutubeController.download')
 Route.group(() => {
     Route.post('/files', 'FileController.store')
 
+    Route.resource('playlist', 'PlaylistController')
+        .apiOnly()
+
     Route.resource('projects', 'ProjectController')
         .apiOnly()
-        .validator(new Map([[['projects.store'],['Project']]]))
+        .validator(new Map([[['projects.store'], ['Project']]]))
     Route.resource('projects.tasks', 'TaskController')
         .apiOnly()
-        .validator(new Map([[['projects.tasks.store'],['Task']]]))
+        .validator(new Map([[['projects.tasks.store'], ['Task']]]))
 }).middleware(['auth'])
 
