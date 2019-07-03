@@ -17,6 +17,7 @@ Route.group(() => {
 
     Route.resource('playlist', 'PlaylistController')
         .apiOnly()
+        .validator(new Map([[['playlist.store'], ['Playlist']]]))
 
     Route.resource('projects', 'ProjectController')
         .apiOnly()

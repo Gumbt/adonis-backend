@@ -32,6 +32,7 @@ class YoutubeController {
                 chunk_size: 6000000
             },
                 function (error, result) {
+                    if (error) throw error
                     //console.log(result, error)
                     fs.unlink(`tmp/uploads/${filename}.${data.type}`, function (err) {
                         if (err) throw err
