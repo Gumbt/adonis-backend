@@ -10,7 +10,7 @@ class UserController {
         const data = request.only(['username','email','password'])
 
         const upload = request.file('avatar')
-
+        let user
         const name = Date.now()
         const fileName = `${name}.${upload.subtype}`
 
@@ -33,11 +33,11 @@ class UserController {
                 if (err) throw err
                 console.log('File deleted')
 
-                User.create({...data,avatar: result.url})
+                user = User.create({...data,avatar: result.url})
             })
         });
 
-        //return user
+        return user
     }
 }
 

@@ -21,7 +21,6 @@ class PlaylistController {
         if(!!upload){
             const name = Date.now()
             const fileName = `${name}.${upload.subtype}`
-
             await upload.move(Helpers.tmpPath('uploads'), {
                 name: fileName
             })
