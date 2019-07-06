@@ -9,7 +9,7 @@ class PlaylistController {
 
     async index({ request }) {
         const { page } = request.get()
-        const playlist = await Project.query().with('user').paginate(page)
+        const playlist = await Playlist.query().with('user').paginate(page)
 
         return playlist
     }
@@ -18,13 +18,13 @@ class PlaylistController {
         const data = request.only(['title', 'description'])
 
         const upload = request.file('thumbnail')
-        if(!!upload){
+        if (!!upload) {
             const name = Date.now()
             const fileName = `${name}.${upload.subtype}`
             await upload.move(Helpers.tmpPath('uploads'), {
                 name: fileName
             })
-            if(!upload.moved()){
+            if (!upload.moved()) {
                 throw upload.error()
             }
 
@@ -36,16 +36,16 @@ class PlaylistController {
                     { width: 500, height: 500, crop: "limit" }
                 ]
             },
-            function (error, result) {
-                if (error) throw error
-                //console.log(result, error)
-                fs.unlink(`tmp/uploads/${fileName}`, function (err) {
-                    if (err) throw err
-                    console.log('File deleted')
-                    Playlist.create({ ...data, user_id: auth.user.id, thumbnail: result.url })
-                })
-            });
-        }else{
+                function (error, result) {
+                    if (error) throw error
+                    //console.log(result, error)
+                    fs.unlink(`tmp/uploads/${fileName}`, function (err) {
+                        if (err) throw err
+                        console.log('File deleted')
+                        Playlist.create({ ...data, user_id: auth.user.id, thumbnail: result.url })
+                    })
+                });
+        } else {
             Playlist.create({ ...data, user_id: auth.user.id })
         }
     }
