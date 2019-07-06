@@ -32,6 +32,7 @@
     "googleapis": "^27.0.0",
     "moment": "^2.24.0",
     "pg": "^7.11.0",
+    "youch": "^2.0.10",
     "ytdl-core": "^0.29.2"
   },
   "devDependencies": {},
