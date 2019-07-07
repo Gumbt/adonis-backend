@@ -16,7 +16,7 @@ class PlaylistController {
 
     async store({ request, response, auth }) {
         const data = request.only(['title', 'description'])
-
+        let playlist
         const upload = request.file('thumbnail')
         if (!!upload) {
             const name = Date.now()
@@ -28,26 +28,20 @@ class PlaylistController {
                 throw upload.error()
             }
 
-            cloudinary.uploader.upload(`tmp/uploads/${fileName}`, {
+            const result = await cloudinary.uploader.upload(`tmp/uploads/${fileName}`, {
                 resource_type: "auto",
                 public_id: `thumbnail/${name}`,
                 chunk_size: 6000000,
                 transformation: [
                     { width: 500, height: 500, crop: "limit" }
                 ]
-            },
-                function (error, result) {
-                    if (error) throw error
-                    //console.log(result, error)
-                    fs.unlink(`tmp/uploads/${fileName}`, function (err) {
-                        if (err) throw err
-                        console.log('File deleted')
-                        Playlist.create({ ...data, user_id: auth.user.id, thumbnail: result.url })
-                    })
-                });
+            });
+            fs.unlinkSync(`tmp/uploads/${fileName}`)
+            playlist = await Playlist.create({ ...data, user_id: auth.user.id, thumbnail: result.url })
         } else {
-            Playlist.create({ ...data, user_id: auth.user.id })
+            playlist = await Playlist.create({ ...data, user_id: auth.user.id })
         }
+        return playlist
     }
 
     async show({ params }) {

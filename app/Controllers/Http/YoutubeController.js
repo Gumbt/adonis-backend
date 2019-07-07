@@ -2,10 +2,21 @@
 
 const Song = use('App/Models/Song')
 const fs = require('fs');
-const ytdl = require('ytdl-core');
+const ytdl = require('ytdl-core');//baixa video, audio do yt
+const searchYt = require('youtube-search');//procura no yt
 const cloudinary = require('../../../resources/CloudinaryService');
 
 class YoutubeController {
+    async search({ request, response }) {
+        const data = request.only(['search', 'maxResults'])
+        var opts = {
+            maxResults: data.maxResults,
+            key: 'AIzaSyDy1velmfau4ecc3olUVZdMCjww47LGxcc'
+        };
+        const busca = await searchYt(data.search, opts);
+        return busca
+    }
+
     async download({ request, response }) {
         const data = request.only(['url', 'type', 'quality', 'playlist'])
         let video
