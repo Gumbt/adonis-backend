@@ -30,7 +30,7 @@
     "@adonisjs/websocket": "^1.0.11",
     "cloudinary": "^1.14.0",
     "googleapis": "^27.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mysql": "^2.17.1",
     "pg": "^7.11.0",
     "youch": "^2.0.10",
